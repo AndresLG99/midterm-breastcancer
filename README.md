@@ -4,9 +4,10 @@
 ---
 
 ## 👥 Team Members
+- Aaron Bracho
 - Andres Lopez  
-- [Member 2]  
-- [Member 3]
+- Lucas Nishimoto  
+- Melissa Osorio
 
 ---
 
@@ -91,7 +92,7 @@ Each model is trained and evaluated using both a **holdout split (70/30)** and *
 - Precision  
 - Recall  
 - F1-score  
-- ROC-AUC (if covered in class)
+- ROC-AUC
 
 Visual outputs:
 - Confusion Matrix  
@@ -113,6 +114,7 @@ midterm-breastcancer/
 │
 ├─ README.md
 ├─ requirements.txt
+├─ DS 301 - Midterm Project.pdf
 │
 ├─ data/
 │  └─ data.csv  # Kaggle dataset file
@@ -200,7 +202,7 @@ python src/train_models.py
 ---
 
 ## 🧰 Tools & Libraries
-- Python 3.11  
+- Python 3.13  
 - pandas  
 - numpy  
 - matplotlib / seaborn  
@@ -230,7 +232,13 @@ python src/train_models.py
 
 ## 📬 Contact
 For questions or collaboration:  
-**Andres Lopez** — [your_email@example.com]
+**Aaron Bracho** — abracho7@gmail.com
+
+**Andres Lopez** — ing.andlopgam5@gmail.com
+
+**Lucas Nishimoto** — luyuki2001@gmail.com
+
+**Melissa Osorio** — melissaosorio851@gmail.com
 
 ---
 
