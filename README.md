@@ -4,10 +4,10 @@
 ---
 
 ## 👥 Team Members
-- Aaron Bracho
 - Andres Lopez  
-- Lucas Nishimoto  
-- Melissa Osorio
+- [Member 2]  
+- [Member 3]
+
 ---
 
 ## 📘 Research Paper
@@ -39,14 +39,15 @@ and to apply:
 
 ## 📊 Dataset
 **Name:** Breast Cancer Wisconsin (Diagnostic)  
-**Source:** [UCI Machine Learning Repository](https://archive.ics.uci.edu/dataset/17/breast+cancer+wisconsin+diagnostic)  
+**Source:** [Kaggle - UCI ML Breast Cancer Wisconsin Dataset](https://www.kaggle.com/datasets/uciml/breast-cancer-wisconsin-data/data)  
 **Instances:** 569  
 **Features:** 30 numeric features + 1 target variable  
 **Target Variable:**
-- `0` → Malignant (cancerous)  
-- `1` → Benign (non-cancerous)
+- `M` → Malignant (cancerous)  
+- `B` → Benign (non-cancerous)
 
 ### **Main Features**
+The dataset includes descriptive statistics of cell nuclei computed from breast mass images such as:
 - Mean radius  
 - Mean texture  
 - Mean perimeter  
@@ -58,48 +59,51 @@ and to apply:
 - No missing values  
 - All features are continuous  
 - Moderate class imbalance (212 malignant / 357 benign)
+- Originally from the UCI Machine Learning Repository  
 
 ---
 
 ## ⚙️ Methodology
 
 ### **1. Data Preprocessing**
-- Load the dataset with `pandas` or `scikit-learn` built-in loader  
-- Check for missing or duplicate values (none expected)  
-- Apply **StandardScaler** for normalization  
-- Split into **70% training** and **30% testing** with stratification  
+- Load the dataset using `pandas` from the downloaded Kaggle CSV file.  
+- Check and handle duplicates or missing values (none expected).  
+- Drop the non-relevant columns (`id`, `Unnamed: 32`).  
+- Convert the target variable: `M` → `0` (Malignant), `B` → `1` (Benign).  
+- Apply **StandardScaler** for normalization.  
+- Split into **70% training** and **30% testing** with stratification.  
 
 ### **2. Feature Extraction (PCA)**
-- Use **PCA** to retain 95% of total variance  
-- Compare model performance **with vs without PCA**
+- Apply **Principal Component Analysis (PCA)** to retain 95% of the variance.  
+- Compare model performance **with and without PCA**.
 
 ### **3. Classification Models**
 | Algorithm | Scikit-learn Class | Notes |
 |------------|--------------------|--------|
 | Logistic Regression | `LogisticRegression()` | Baseline linear classifier |
-| Decision Tree | `DecisionTreeClassifier()` | Tree-based model with interpretable structure |
-| K-Nearest Neighbors | `KNeighborsClassifier()` | Distance-based non-parametric method |
+| Decision Tree | `DecisionTreeClassifier()` | Simple tree-based model |
+| K-Nearest Neighbors | `KNeighborsClassifier()` | Distance-based method |
 
-Each model is evaluated using both a **holdout (70/30)** split and **10-fold cross-validation**.
+Each model is trained and evaluated using both a **holdout split (70/30)** and **10-fold cross-validation**.
 
 ### **4. Evaluation Metrics**
 - Accuracy  
 - Precision  
 - Recall  
 - F1-score  
-- ROC-AUC
+- ROC-AUC (if covered in class)
 
-Visual outputs include:
+Visual outputs:
 - Confusion Matrix  
 - ROC Curve  
-- PCA explained variance chart  
+- PCA variance explained plot  
 
 ---
 
 ## 🔁 Cross-Validation
 - **Method:** Stratified 10-Fold Cross Validation  
-- Ensures equal class representation in every fold  
-- Provides a robust performance estimate  
+- Ensures balanced class distribution across folds  
+- Provides robust and unbiased performance estimates  
 
 ---
 
@@ -109,10 +113,9 @@ midterm-breastcancer/
 │
 ├─ README.md
 ├─ requirements.txt
-├─ DS 301 - Midterm Project.pdf
 │
 ├─ data/
-│  └─ breast_cancer_wdbc.csv
+│  └─ data.csv  # Kaggle dataset file
 │
 ├─ notebooks/
 │  ├─ 01_EDA_and_preprocessing.ipynb
@@ -157,17 +160,22 @@ source venv/bin/activate       # On Windows: venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-### **4. Run Code**
+### **4. Add the Dataset**
+1. Go to [the Kaggle dataset page](https://www.kaggle.com/datasets/uciml/breast-cancer-wisconsin-data/data).  
+2. Download the `data.csv` file.  
+3. Place it in the `/data/` folder inside this repository.  
+
+### **5. Run the Code**
 You can either:
-- Open and execute the notebooks in `/notebooks`, **or**
-- Run the Python script directly:
+- Open and run the notebooks from `/notebooks`, **or**
+- Execute:
 ```bash
 python src/train_models.py
 ```
 
-### **5. View Results**
+### **6. View Results**
 - Final metrics: `results/metrics_summary.csv`  
-- Saved models: `models/`  
+- Saved models: `models/`
 
 ---
 
@@ -176,7 +184,7 @@ python src/train_models.py
 | Model | Accuracy | Precision | Recall | F1-score |
 |--------|-----------|------------|----------|-----------|
 | Logistic Regression | ~97% | ~97% | ~97% | ~97% |
-| Decision Tree | ~94% | ~94% | ~93% | ~93% |
+| Decision Tree | ~94% | ~93% | ~94% | ~93% |
 | KNN | ~96% | ~96% | ~96% | ~96% |
 
 *(Values may vary slightly based on random state or PCA settings.)*
@@ -184,15 +192,15 @@ python src/train_models.py
 ---
 
 ## 💡 Suggested Improvements
-- Add **Lasso/Ridge Logistic Regression** for regularization  
+- Apply **Lasso/Ridge Logistic Regression** for regularization  
 - Use **GridSearchCV** for hyperparameter tuning  
-- Explore **LDA** for feature extraction  
-- Apply **ensemble averaging** or **bagging** (as future work)  
+- Try **LDA** for additional feature extraction  
+- Consider ensemble methods like Random Forest for comparison  
 
 ---
 
 ## 🧰 Tools & Libraries
-- Python 3.13  
+- Python 3.11  
 - pandas  
 - numpy  
 - matplotlib / seaborn  
@@ -203,7 +211,7 @@ python src/train_models.py
 
 ## 🧾 References
 - Arshad, Shahriar & Anjum (2023). *The Power of Simplicity: Why Simple Linear Models Outperform Complex Machine Learning Techniques – Case of Breast Cancer Diagnosis.* [arXiv:2306.02449](https://arxiv.org/abs/2306.02449)  
-- UCI Machine Learning Repository: *Breast Cancer Wisconsin (Diagnostic)* dataset.  
+- Kaggle: *Breast Cancer Wisconsin (Diagnostic)* dataset. [https://www.kaggle.com/datasets/uciml/breast-cancer-wisconsin-data](https://www.kaggle.com/datasets/uciml/breast-cancer-wisconsin-data)  
 - scikit-learn documentation: [https://scikit-learn.org/stable/](https://scikit-learn.org/stable/)
 
 ---
@@ -214,7 +222,6 @@ python src/train_models.py
 ✅ Classification & Logistic Regression  
 ✅ Lasso & Ridge Regression *(suggested improvement)*  
 ✅ Cross Validation Techniques  
-✅ Multiple Linear Regression *(theoretical foundation)*  
 ✅ PCA (Feature Extraction)  
 ✅ Feature Scaling Techniques  
 ✅ Data Preprocessing  
@@ -223,13 +230,7 @@ python src/train_models.py
 
 ## 📬 Contact
 For questions or collaboration:  
-**Aaron Bracho** — abracho7@gmail.com
-
-**Andres Lopez** — ing.andlopgam5@gmail.com
-
-**Lucas Nishimoto** — luyuki2001@gmail.com
-
-**Melissa Osorio** — melissaosorio851@gmail.com
+**Andres Lopez** — [your_email@example.com]
 
 ---
 
