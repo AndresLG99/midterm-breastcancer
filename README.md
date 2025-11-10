@@ -8,7 +8,6 @@
 - Andres Lopez  
 - Lucas Nishimoto  
 - Melissa Osorio
-
 ---
 
 ## 📘 Research Paper
@@ -88,7 +87,7 @@ Each model is evaluated using both a **holdout (70/30)** split and **10-fold cro
 - Precision  
 - Recall  
 - F1-score  
-- ROC-AUC (optional, if covered in class)
+- ROC-AUC
 
 Visual outputs include:
 - Confusion Matrix  
