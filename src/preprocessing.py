@@ -16,7 +16,8 @@ def drop_unnecessary_columns(df_rows_dropped, *args):
 
 def mapping_target_feature(df_no_unnecessary, target_feature, key1, key2, value1, value2):
     df_target_feature_mapped = df_no_unnecessary.copy()
-    df_target_feature_mapped[target_feature] = df_no_unnecessary[target_feature].map({f"{key1}": value1, f"{key2}": value2})
+    df_target_feature_mapped.loc[df_target_feature_mapped[target_feature] == key1, df_target_feature_mapped] = value1
+    df_target_feature_mapped.loc[df_target_feature_mapped[target_feature] == key2, df_target_feature_mapped] = value2
     return df_target_feature_mapped
 
 def find_missing_values(df_target_feature_mapped):
