@@ -1,7 +1,13 @@
 import pandas as pd
 
-def load_data(path="../data/data.csv"):
+def load_data(name_csv):
+    path = f"../data/{name_csv}"
     df = pd.read_csv(path)
-    df.drop(['id', 'Unnamed: 32'], axis=1, inplace=True)
-    df['diagnosis'] = df['diagnosis'].map({'M': 0, 'B': 1})
     return df
+
+def show_first_rows(df, rows):
+    df.head(rows)
+
+def show_shape(df):
+    rows, columns = df.shape
+    print(f"Rows: {rows}\nColumns: {columns}")
