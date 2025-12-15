@@ -3,8 +3,13 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.preprocessing import LabelEncoder, OrdinalEncoder, StandardScaler
 
-def drop_unnecessary_columns(df_original, *args):
-    df_no_unnecessary = df_original.copy()
+def drop_rows_from_col(df_original, column):
+    df_rows_dropped = df_original.copy()
+    df_rows_dropped = df_rows_dropped.dropna(subset=[column])
+    return df_rows_dropped
+
+def drop_unnecessary_columns(df_rows_dropped, *args):
+    df_no_unnecessary = df_rows_dropped.copy()
     for column in args:
         df_no_unnecessary.drop([column], axis=1, inplace=True)
     return df_no_unnecessary

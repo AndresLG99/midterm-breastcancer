@@ -1,9 +1,7 @@
 from sklearn.svm import SVC
 from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
 
-def svm_model(X_train, X_test, Y_train, Y_test):
-    kernels = ["rbf", "linear", "poly"]
-    c = [1,100,1_000]
+def svm_model(X_train, X_test, Y_train, Y_test, kernels, cs):
     svc = SVC()
     svc.fit(X_train, Y_train)
     Y_svc_pred = svc.predict(X_test)
@@ -11,13 +9,13 @@ def svm_model(X_train, X_test, Y_train, Y_test):
     max_result = 0
 
     for kernel in kernels:
-        for i in c:
+        for i in cs:
             svc_opt_linear = SVC(kernel=kernel, C=i)
             svc_opt_linear.fit(X_train, Y_train)
             Y_pred = svc_opt_linear.predict(X_test)
             result = accuracy_score(Y_test, Y_pred)
             results.append(result)
-            print(f"Accuracy score for C={c} and {kernel} kernel: {result:.4f}")
+            print(f"Accuracy score for C={i} and {kernel} kernel: {result:.4f}")
             if result > max_result:
                 max_result = result
                 max_kernel = kernel
