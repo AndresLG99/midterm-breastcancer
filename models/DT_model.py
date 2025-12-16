@@ -6,30 +6,49 @@ import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.tree import plot_tree
 
-def dt_model(X_train, X_test, Y_train, Y_test, range1, range2):
-    dt_clr = DecisionTreeClassifier()
-    dt_clr.fit(X_train, Y_train)
-    Y_dt_pred = dt_clr.predict(X_test)
-    dt_accuracy = accuracy_score(Y_test, Y_dt_pred)
+def dt_model(X_train, X_test, Y_train, Y_test, max_depths, min_samples_split_values,min_samples_leaf_values):
+    base_dt = DecisionTreeClassifier(random_state=42)
+    base_dt.fit(X_train, Y_train)
+    Y_base = base_dt.predict(X_test)
+    base_acc = accuracy_score(Y_test, Y_base)
 
     # Find the best value for max_depth in decision tree
-    scores = []
-    depths = range(range1, range2)
-    for d in depths:
-        score = cross_val_score(DecisionTreeClassifier(criterion="entropy", max_depth=d), X_train, Y_train, cv=5)
-        avg_score = mean(score)
-        scores.append(avg_score)
+    best_score = 0
+    best_params = None
 
-    best_depth = depths[np.argmax(scores)]
+    for md in max_depths:
+        for mss in min_samples_split_values:
+            for msl in min_samples_leaf_values:
+                dt = DecisionTreeClassifier(
+                criterion="entropy",
+                max_depth=md,
+                min_samples_split=mss,
+                min_samples_leaf=msl,
+                random_state=42)
+                cv_scores = cross_val_score(dt, X_train, Y_train, cv=5)
+                avg_score = mean(cv_scores)
 
-    dt_clr_opt = DecisionTreeClassifier(criterion="entropy", max_depth=best_depth)
-    dt_clr_opt.fit(X_train, Y_train)
+                print(f"max_depth={md}, min_samples_split={mss}, min_samples_leaf={msl} -> CV accuracy={avg_score:.4f}")
 
-    Y_dt_opt_pred = dt_clr_opt.predict(X_test)
-    result = accuracy_score(Y_test, Y_dt_opt_pred)
-    print(f"Accuracy score for the optimized decision tree classifier: {result:.4f}")
+                if avg_score > best_score:
+                    best_score = avg_score
+                    best_params = (md, mss, msl)
 
-    return result, dt_clr_opt, Y_dt_opt_pred
+    best_md, best_mss, best_msl = best_params
+    dt_best = DecisionTreeClassifier(
+        criterion="entropy",
+        max_depth=best_md,
+        min_samples_split=best_mss,
+        min_samples_leaf=best_msl,
+        random_state=42)
+    dt_best.fit(X_train, Y_train)
+    Y_best = dt_best.predict(X_test)
+    test_acc = accuracy_score(Y_test, Y_best)
+
+    print(f"\nBest params: max_depth={best_md}, min_samples_split={best_mss}, min_samples_leaf={best_msl}")
+    print(f"\nAccuracy score for optimized decision tree: {test_acc:.4f}")
+
+    return test_acc, Y_best
 
 def plot_decision_tree(X_train, target_name1, target_name2, best_depth, dt_clr_opt):
     plt.figure(figsize=(25, 15))

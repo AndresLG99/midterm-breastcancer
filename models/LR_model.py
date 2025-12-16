@@ -1,8 +1,8 @@
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import roc_auc_score, confusion_matrix, classification_report
 
-def lr_model(X_train, X_test, Y_train, Y_test):
-    lr = LogisticRegression(random_state=42, max_iter=500)
+def lr_model(X_train, X_test, Y_train, Y_test, iterations):
+    lr = LogisticRegression(random_state=42, max_iter=iterations)
     lr.fit(X_train, Y_train)
     Y_pred = lr.predict(X_test)
     Y_probs = lr.predict_proba(X_test)

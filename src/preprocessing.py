@@ -24,7 +24,7 @@ def find_missing_values(df_target_feature_mapped):
     for column in df_target_feature_mapped.columns:
         if df_target_feature_mapped[column].isnull().sum() > 0:
             missing_values_cols.append(column)
-            print(column, end=" ")
+            print(column)
             print(df_target_feature_mapped[column].isnull().sum())
     return missing_values_cols
 
@@ -107,24 +107,51 @@ def encode_df(df_clipped, **kwargs):
 
         return df_encoded
 
-def plot_correlation_matrix(df_encoded, num_cols):
-    # Compute correlation matrix
+def plot_correlation_matrix(df_encoded, num_cols, target_feature, k):
+    """
+    Plot correlation matrix for numerical columns, print top-k features
+    most correlated (by absolute value) with target_feature, and return
+    their names as a Python list.
+    """
+    # Correlation Matrix
     corr_matrix = df_encoded[num_cols].corr()
 
-    # Plot correlation heatmap
+    # Heatmap
     plt.figure(figsize=(10, 8))
-    sns.heatmap(corr_matrix, annot=True, cmap="coolwarm", center=0,square=True, fmt='.3f', cbar_kws={"label": "Correlation"})
+    sns.heatmap(
+        corr_matrix,
+        annot=True,
+        cmap="coolwarm",
+        center=0,
+        square=True,
+        fmt=".3f",
+        cbar_kws={"label": "Correlation"})
     plt.title("Correlation Matrix (Numerical Features + Target)")
     plt.tight_layout()
     plt.show()
 
-    # Find top 3 features most correlated with target
-    target_corr = corr_matrix["income_encoded"].drop("income_encoded").abs().sort_values(ascending=False)
-    top_3 = target_corr.head(3)
+    # Absolute correlation with target, sorted
+    target_corr = (corr_matrix[target_feature].drop(target_feature).abs().sort_values(ascending=False))
+    top_k = target_corr.head(k)
 
-    print("Top 3 features most correlated with income_encoded:")
-    for feature, corr in top_3.items():
+    print(f"Top {k} features most correlated with {target_feature}:")
+    for feature, corr in top_k.items():
         print(f"{feature}: {corr:.4f}")
+
+    # Return list of feature names
+    return top_k.index.to_list()
+
+def keep_top_features(df_encoded, top_features, target_feature):
+    """
+    Given a DataFrame, a list of top feature names, and the target column name,
+    return a new DataFrame that contains only those columns.
+    """
+    cols_to_keep = top_features + [target_feature]
+
+    # Intersect with existing columns in case of mismatch
+    cols_to_keep = df_encoded.columns.intersection(cols_to_keep)
+    df_reduced = df_encoded[cols_to_keep].copy()
+    return df_reduced
 
 def scaling(df_encoded, num_cols):
     df_scaled = df_encoded.copy()
@@ -132,20 +159,3 @@ def scaling(df_encoded, num_cols):
     df_scaled[num_cols] = scaler.fit_transform(df_encoded[num_cols])
     return df_scaled
 
-"""def preprocess_data(df):
-    X = df.drop('diagnosis', axis=1)
-    y = df['diagnosis']
-
-    X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=0.3, stratify=y, random_state=42
-    )
-
-    scaler = StandardScaler()
-    X_train_scaled = scaler.fit_transform(X_train)
-    X_test_scaled = scaler.transform(X_test)
-
-    pca = PCA(n_components=0.95)
-    X_train_pca = pca.fit_transform(X_train_scaled)
-    X_test_pca = pca.transform(X_test_scaled)
-
-    return X_train_pca, X_test_pca, y_train, y_test"""
