@@ -1,10 +1,7 @@
 from sklearn.tree import DecisionTreeClassifier
-from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
+from sklearn.metrics import accuracy_score
 from sklearn.model_selection import cross_val_score
 from statistics import mean
-import numpy as np
-import matplotlib.pyplot as plt
-from sklearn.tree import plot_tree
 
 def dt_model(X_train, X_test, Y_train, Y_test, max_depths, min_samples_split_values,min_samples_leaf_values):
     base_dt = DecisionTreeClassifier(random_state=42)
@@ -48,24 +45,4 @@ def dt_model(X_train, X_test, Y_train, Y_test, max_depths, min_samples_split_val
     print(f"\nBest params: max_depth={best_md}, min_samples_split={best_mss}, min_samples_leaf={best_msl}")
     print(f"\nAccuracy score for optimized decision tree: {test_acc:.4f}")
 
-    return test_acc, Y_best
-
-def plot_decision_tree(X_train, target_name1, target_name2, best_depth, dt_clr_opt):
-    plt.figure(figsize=(25, 15))
-    plot_tree(dt_clr_opt,
-              feature_names=X_train.columns,
-              class_names=[target_name1, target_name2],
-              filled=True,
-              rounded=True,
-              max_depth=best_depth,
-              fontsize=10)
-    plt.title(f"Decision Tree (First {best_depth} Levels)", fontsize=16)
-    plt.tight_layout()
-    plt.show()
-
-def show_confusion_matrix(Y_test, Y_pred):
-    conf_matrix = confusion_matrix(Y_test, Y_pred)
-    print(conf_matrix)
-
-def show_classification_report(Y_test, Y_pred, target_name1, target_name2):
-    print(classification_report(Y_test, Y_pred, target_names=[target_name1, target_name2]))
+    return test_acc, Y_best, best_md, dt_best

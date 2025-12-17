@@ -1,5 +1,5 @@
 from sklearn.svm import SVC
-from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
+from sklearn.metrics import accuracy_score
 
 def svm_model(X_train, X_test, Y_train, Y_test, kernels, cs, gammas):
     svc = SVC()
@@ -33,11 +33,4 @@ def svm_model(X_train, X_test, Y_train, Y_test, kernels, cs, gammas):
 
     print(f"\nAccuracy score for best result overall:\nC={max_c}, kernel={max_kernel} and gamma={max_gamma}: {max_result:.4f}")
 
-    return max_result, Y_pred
-
-def show_confusion_matrix(Y_test, Y_pred):
-    conf_matrix = confusion_matrix(Y_test, Y_pred)
-    print(conf_matrix)
-
-def show_classification_report(Y_test, Y_pred, target_name1, target_name2):
-    print(classification_report(Y_test, Y_pred, target_names=[target_name1, target_name2]))
+    return max_result, Y_pred, svc_opt

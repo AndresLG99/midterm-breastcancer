@@ -1,5 +1,5 @@
 from sklearn.neural_network import MLPClassifier
-from sklearn.metrics import roc_auc_score, confusion_matrix, classification_report
+from sklearn.metrics import roc_auc_score
 
 def nn_model(X_train, X_test, Y_train, Y_test):
     nn = MLPClassifier(
@@ -15,11 +15,4 @@ def nn_model(X_train, X_test, Y_train, Y_test):
     result = roc_auc_score(Y_test, Y_pred_proba_nn)
     print(f"Neural Network ROC-AUC: {result:.4f}")
 
-    return result, Y_pred_proba_nn
-
-def show_confusion_matrix(Y_test, Y_pred):
-    conf_matrix = confusion_matrix(Y_test, Y_pred)
-    print(conf_matrix)
-
-def show_classification_report(Y_test, Y_pred, target_name1, target_name2):
-    print(classification_report(Y_test, Y_pred, target_names=[target_name1, target_name2]))
+    return result, Y_pred_proba_nn, Y_pred_nn, nn

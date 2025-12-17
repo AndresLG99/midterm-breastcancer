@@ -32,9 +32,9 @@ def handle_missing_values(df_target_feature_mapped, missing_values_cols, num_col
     df_no_missing_values = df_target_feature_mapped.copy()
     for column in missing_values_cols:
         if column in num_cols:
-            df_no_missing_values[column].fillna(df_no_missing_values[column].median())
+            df_no_missing_values[column] = df_no_missing_values[column].fillna(df_no_missing_values[column].median())
         elif column in cat_cols:
-            df_no_missing_values[column].fillna("Unknown")
+            df_no_missing_values[column] = df_no_missing_values[column].fillna("Unknown")
     return df_no_missing_values
 
 def find_numerical_features(df):
@@ -45,19 +45,7 @@ def find_categorical_features(df):
     cat_cols = df.select_dtypes(include=["object", "category"]).columns.tolist()
     return cat_cols
 
-def plot_outliers(df_no_missing_values, num_cols):
-    fig, axes = plt.subplots(6, 5, figsize=(12, 6))
-    axes = axes.ravel()
-
-    for ax, c in zip(axes, num_cols):
-        sns.boxplot(y=df_no_missing_values[c], ax=ax)
-        ax.set_title(c)
-
-    plt.tight_layout()
-    plt.show()
-
-def handle_outliers(df_no_missing_values, lower_bound, upper_bound,  k=1.5):
-    df_clipped = df_no_missing_values.copy()
+def handle_outliers(df_clipped, lower_bound, upper_bound,  k=1.5):
     q1 = df_clipped.quantile(lower_bound)
     q3 = df_clipped.quantile(upper_bound)
     iqr = q3 - q1
@@ -71,7 +59,7 @@ def handle_outliers(df_no_missing_values, lower_bound, upper_bound,  k=1.5):
 
 def skewness_check(df_clipped, num_cols):
     skewness = df_clipped[num_cols].skew()
-    print("\nSkewness (positive = right-skewed):")
+    print("\nSkewness (positive = right-skewed):\n")
     print(skewness)
 
 def encode_df(df_clipped, **kwargs):
@@ -106,40 +94,6 @@ def encode_df(df_clipped, **kwargs):
             df = df_encoded.drop(values, axis=1)
 
         return df_encoded
-
-def plot_correlation_matrix(df_encoded, num_cols, target_feature, k):
-    """
-    Plot correlation matrix for numerical columns, print top-k features
-    most correlated (by absolute value) with target_feature, and return
-    their names as a Python list.
-    """
-    # Correlation Matrix
-    corr_matrix = df_encoded[num_cols].corr()
-
-    # Heatmap
-    plt.figure(figsize=(10, 8))
-    sns.heatmap(
-        corr_matrix,
-        annot=True,
-        cmap="coolwarm",
-        center=0,
-        square=True,
-        fmt=".3f",
-        cbar_kws={"label": "Correlation"})
-    plt.title("Correlation Matrix (Numerical Features + Target)")
-    plt.tight_layout()
-    plt.show()
-
-    # Absolute correlation with target, sorted
-    target_corr = (corr_matrix[target_feature].drop(target_feature).abs().sort_values(ascending=False))
-    top_k = target_corr.head(k)
-
-    print(f"Top {k} features most correlated with {target_feature}:")
-    for feature, corr in top_k.items():
-        print(f"{feature}: {corr:.4f}")
-
-    # Return list of feature names
-    return top_k.index.to_list()
 
 def keep_top_features(df_encoded, top_features, target_feature):
     """
